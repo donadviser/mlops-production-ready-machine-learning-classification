@@ -7,7 +7,7 @@ __version__ = "0.0.0"
 
 REPO_NAME = "usvisa"
 AUTHOR_USER_NAME = "donadviser"
-SRC_REPO = "usvisa"
+SRC_REPO = "mlops-production-ready-machine-learning-classification"
 AUTHOR_EMAIL = "donadviser@gmail.com"
 
 
@@ -17,7 +17,7 @@ setuptools.setup(
     version=__version__,
     author=AUTHOR_USER_NAME,
     author_email=AUTHOR_EMAIL,
-    description="A production-grade machine learning classification for US Visa Application prediction using AWS services",
+    description="A production-grade machine learning US Visa Application Result classifier using AWS services",
     long_description=long_description,
     long_description_content_type="text/markdown",
     url=f"https://github.com/{AUTHOR_USER_NAME}/{REPO_NAME}",
