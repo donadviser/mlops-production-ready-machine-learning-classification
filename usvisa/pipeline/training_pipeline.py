@@ -4,13 +4,16 @@ from usvisa.exception import CustomException
 
 from usvisa.components.data_ingestion import DataIngestion
 from usvisa.components.data_validation import DataValidation
+from usvisa.components.data_transformation import DataTransformation
 from usvisa.entity.config_entity import (
     DataIngestionConfig,
     DataValidationConfig,
+    DataTransformationConfig,
 )
 from usvisa.entity.artefact_entity import (
     DataIngestionArtefact,
     DataValidationArtefact,
+    DataTransformationArtefact,
 )
 
 
@@ -21,6 +24,7 @@ class TrainPipeline:
     def __init__(self):
         self.data_ingestion_config = DataIngestionConfig()
         self.data_validation_config = DataValidationConfig()
+        self.data_transformation_config = DataTransformationConfig()
         
            
     def start_data_ingestion(self) -> DataIngestionArtefact:
@@ -67,6 +71,27 @@ class TrainPipeline:
             raise CustomException(e, sys) 
         
         
+    def start_data_transformation(self, data_ingestion_artefact: DataIngestionArtefact, data_validation_artefact: DataValidationArtefact) -> DataTransformationArtefact:
+        """
+        Perform data transformation steps to prepare the data for training
+        
+        Output: DataTransformationArtefact
+        On Failure:  Write an exception log and then raise an exception
+        """
+        logging.info("Entered the start_data_transformation method of TrainPipeline class")
+
+        try:
+            data_transformation = DataTransformation(data_ingestion_artefact=data_ingestion_artefact,
+                                                     data_transformation_config=self.data_transformation_config,
+                                                     data_validation_artefact=data_validation_artefact)
+            
+            data_transformation_artefact = data_transformation.initiate_data_transformation()
+            
+            return data_transformation_artefact
+        except Exception as e:
+            raise CustomException(e, sys)
+        
+        
     def run_pipeline(self) -> None:
         """
         Run the data ingestion, preprocessing, and training pipeline
@@ -78,6 +103,9 @@ class TrainPipeline:
             
             data_validation_artefact = self.start_data_validation(data_ingestion_artefact)
             
+            data_transformation_artefact = self.start_data_transformation(
+                data_ingestion_artefact=data_ingestion_artefact, data_validation_artefact=data_validation_artefact)  
+                      
             # TODO: Add your machine learning model training code here
             
             logging.info("Training pipeline completed successfully")
