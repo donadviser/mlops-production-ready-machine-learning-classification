@@ -2,7 +2,7 @@
 
 Youtube Playlist: 
 
-- Anaconda: https://www.anaconda.com/
+- Pyenv: https://github.com/pyenv/pyenv
 - Vs code: https://code.visualstudio.com/download
 - Git: https://git-scm.com/
 - Flowchart: https://whimsical.com/
@@ -25,11 +25,15 @@ git push origin main
 ## How to run?
 
 ```bash
-conda create -n visa python=3.11 -y
+pyenv virtualenv 3.11 venv311_usvisa
 ```
 
 ```bash
-conda activate visa
+pyenv activate venv311_usvisa
+```
+
+```bash
+pyenv pyenv local venv311_usvisa
 ```
 
 ```bash
