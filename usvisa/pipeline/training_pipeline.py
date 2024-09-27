@@ -5,15 +5,18 @@ from usvisa.exception import CustomException
 from usvisa.components.data_ingestion import DataIngestion
 from usvisa.components.data_validation import DataValidation
 from usvisa.components.data_transformation import DataTransformation
+from usvisa.components.model_trainer import ModelTrainer
 from usvisa.entity.config_entity import (
     DataIngestionConfig,
     DataValidationConfig,
     DataTransformationConfig,
+    ModelTrainerConfig,
 )
 from usvisa.entity.artefact_entity import (
     DataIngestionArtefact,
     DataValidationArtefact,
     DataTransformationArtefact,
+    ModelTrainerArtefact,
 )
 
 
@@ -25,6 +28,7 @@ class TrainPipeline:
         self.data_ingestion_config = DataIngestionConfig()
         self.data_validation_config = DataValidationConfig()
         self.data_transformation_config = DataTransformationConfig()
+        self.model_trainer_config = ModelTrainerConfig()
         
            
     def start_data_ingestion(self) -> DataIngestionArtefact:
@@ -92,6 +96,22 @@ class TrainPipeline:
             raise CustomException(e, sys)
         
         
+    def start_model_trainer(self, data_transformation_artefact: DataTransformationArtefact) -> ModelTrainerArtefact:
+        """
+        This method of TrainPipeline class is responsible for starting model training
+        """
+        try:
+            model_trainer = ModelTrainer(data_transformation_artefact=data_transformation_artefact,
+                                         model_trainer_config=self.model_trainer_config
+                                         )
+            model_trainer_artefact = model_trainer.initiate_model_trainer()
+            return model_trainer_artefact
+
+        except Exception as e:
+            raise CustomException(e, sys)
+        
+        
+        
     def run_pipeline(self) -> None:
         """
         Run the data ingestion, preprocessing, and training pipeline
@@ -105,6 +125,12 @@ class TrainPipeline:
             
             data_transformation_artefact = self.start_data_transformation(
                 data_ingestion_artefact=data_ingestion_artefact, data_validation_artefact=data_validation_artefact)  
+            
+            model_trainer_artefact = self.start_model_trainer(data_transformation_artefact=data_transformation_artefact)  
+            
+            
+            
+            # TODO: Uncomment this line after implementing model_trainer.initiate_model_trainer() method in model_trainer.py
                       
             # TODO: Add your machine learning model training code here
             
